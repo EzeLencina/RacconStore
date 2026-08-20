@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   LayoutDashboard, ShoppingBag, MapPin, Heart, Star,
@@ -25,6 +25,17 @@ type AccountSidebarProps = { mobileOpen?: boolean; onClose?: () => void };
 
 export function AccountSidebar({ mobileOpen, onClose }: AccountSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } finally {
+      onClose?.();
+      router.push('/');
+      router.refresh();
+    }
+  }
 
   return (
     <>
@@ -71,6 +82,7 @@ export function AccountSidebar({ mobileOpen, onClose }: AccountSidebarProps) {
           <hr className="my-2 border-border" />
           <button
             type="button"
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
           >
             <LogOut className="h-4 w-4 shrink-0" />

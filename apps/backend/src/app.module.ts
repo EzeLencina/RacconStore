@@ -9,6 +9,7 @@ import { OrdersModule } from '@modules/orders/orders.module';
 import { CustomersModule } from '@modules/customers/customers.module';
 import { WishlistsModule } from '@modules/wishlists/wishlists.module';
 import { ReviewsModule } from '@modules/reviews/reviews.module';
+import { ImportExportModule } from '@modules/import-export';
 import appConfig from '@config/app.config';
 import databaseConfig from '@config/database.config';
 import redisConfig from '@config/redis.config';
@@ -42,6 +43,7 @@ import cacheConfig from '@config/cache.config';
     CustomersModule,
     WishlistsModule,
     ReviewsModule,
+    ImportExportModule,
   ],
 })
 export class AppModule {}

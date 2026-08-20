@@ -1,0 +1,157 @@
+{
+  "version": "5.22.0",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "UserStatus",
+      "values": ["ACTIVE", "INACTIVE", "SUSPENDED", "ARCHIVED"]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "RoleName",
+      "values": ["CUSTOMER", "ADMIN"]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "AuditAction",
+      "values": ["AUTH_REGISTER", "AUTH_LOGIN", "AUTH_LOGOUT", "ROLE_PROMOTE", "ROLE_DEMOTE"]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "users",
+      "columns": [
+        { "name": "id", "type": "Text", "default": { "name": "cuid" } },
+        { "name": "tenantId", "type": "Text" },
+        { "name": "email", "type": "Text" },
+        { "name": "name", "type": "Text", "optional": true },
+        { "name": "passwordHash", "type": "Text" },
+        { "name": "status", "type": "UserStatus", "default": "ACTIVE" },
+        { "name": "emailVerified", "type": "Boolean", "default": false },
+        { "name": "lastLoginAt", "type": "DateTime", "optional": true },
+        { "name": "deletedAt", "type": "DateTime", "optional": true },
+        { "name": "createdAt", "type": "DateTime", "default": "now" },
+        { "name": "updatedAt", "type": "DateTime" }
+      ],
+      "uniqueConstraints": [
+        { "name": "users_tenantId_email_key", "columns": ["tenantId", "email"] }
+      ],
+      "indexes": [
+        { "name": "users_tenantId_status_idx", "columns": ["tenantId", "status"] },
+        { "name": "users_tenantId_createdAt_idx", "columns": ["tenantId", "createdAt"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "roles",
+      "columns": [
+        { "name": "id", "type": "Text", "default": { "name": "cuid" } },
+        { "name": "tenantId", "type": "Text" },
+        { "name": "name", "type": "RoleName" },
+        { "name": "code", "type": "Text" },
+        { "name": "description", "type": "Text", "optional": true },
+        { "name": "isSystem", "type": "Boolean", "default": false },
+        { "name": "createdAt", "type": "DateTime", "default": "now" },
+        { "name": "updatedAt", "type": "DateTime" }
+      ],
+      "uniqueConstraints": [
+        { "name": "roles_tenantId_code_key", "columns": ["tenantId", "code"] }
+      ],
+      "indexes": [
+        { "name": "roles_tenantId_name_idx", "columns": ["tenantId", "name"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "permissions",
+      "columns": [
+        { "name": "id", "type": "Text", "default": { "name": "cuid" } },
+        { "name": "tenantId", "type": "Text" },
+        { "name": "code", "type": "Text" },
+        { "name": "resource", "type": "Text" },
+        { "name": "action", "type": "Text" },
+        { "name": "description", "type": "Text", "optional": true },
+        { "name": "createdAt", "type": "DateTime", "default": "now" }
+      ],
+      "uniqueConstraints": [
+        { "name": "permissions_tenantId_code_key", "columns": ["tenantId", "code"] }
+      ],
+      "indexes": [
+        { "name": "permissions_tenantId_resource_action_idx", "columns": ["tenantId", "resource", "action"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "user_roles",
+      "columns": [
+        { "name": "tenantId", "type": "Text" },
+        { "name": "userId", "type": "Text" },
+        { "name": "roleId", "type": "Text" },
+        { "name": "assignedAt", "type": "DateTime", "default": "now" },
+        { "name": "assignedBy", "type": "Text", "optional": true }
+      ],
+      "uniqueConstraints": [
+        { "name": "user_roles_pkey", "columns": ["tenantId", "userId", "roleId"] }
+      ],
+      "indexes": [
+        { "name": "user_roles_tenantId_roleId_idx", "columns": ["tenantId", "roleId"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "role_permissions",
+      "columns": [
+        { "name": "tenantId", "type": "Text" },
+        { "name": "roleId", "type": "Text" },
+        { "name": "permissionId", "type": "Text" },
+        { "name": "createdAt", "type": "DateTime", "default": "now" }
+      ],
+      "uniqueConstraints": [
+        { "name": "role_permissions_pkey", "columns": ["tenantId", "roleId", "permissionId"] }
+      ],
+      "indexes": [
+        { "name": "role_permissions_tenantId_permissionId_idx", "columns": ["tenantId", "permissionId"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "sessions",
+      "columns": [
+        { "name": "id", "type": "Text" },
+        { "name": "tenantId", "type": "Text" },
+        { "name": "userId", "type": "Text" },
+        { "name": "expiresAt", "type": "DateTime" },
+        { "name": "lastUsedAt", "type": "DateTime", "default": "now" },
+        { "name": "revokedAt", "type": "DateTime", "optional": true },
+        { "name": "createdAt", "type": "DateTime", "default": "now" }
+      ],
+      "primaryKey": { "name": "sessions_pkey", "columns": ["id"] },
+      "indexes": [
+        { "name": "sessions_tenantId_userId_idx", "columns": ["tenantId", "userId"] },
+        { "name": "sessions_tenantId_expiresAt_idx", "columns": ["tenantId", "expiresAt"] }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "audit_logs",
+      "columns": [
+        { "name": "id", "type": "Text", "default": { "name": "cuid" } },
+        { "name": "tenantId", "type": "Text" },
+        { "name": "actorId", "type": "Text", "optional": true },
+        { "name": "actorEmail", "type": "Text", "optional": true },
+        { "name": "action", "type": "AuditAction" },
+        { "name": "entityType", "type": "Text", "optional": true },
+        { "name": "entityId", "type": "Text", "optional": true },
+        { "name": "metadata", "type": "Json", "optional": true },
+        { "name": "ip", "type": "Text", "optional": true },
+        { "name": "userAgent", "type": "Text", "optional": true },
+        { "name": "createdAt", "type": "DateTime", "default": "now" }
+      ],
+      "primaryKey": { "name": "audit_logs_pkey", "columns": ["id"] },
+      "indexes": [
+        { "name": "audit_logs_tenantId_action_createdAt_idx", "columns": ["tenantId", "action", "createdAt"] },
+        { "name": "audit_logs_tenantId_actorId_createdAt_idx", "columns": ["tenantId", "actorId", "createdAt"] },
+        { "name": "audit_logs_tenantId_entityType_entityId_idx", "columns": ["tenantId", "entityType", "entityId"] }
+      ]
+    }
+  ]
+}

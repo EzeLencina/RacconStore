@@ -19,6 +19,8 @@
     "db:format": "prisma format",
     "db:validate": "prisma validate",
     "db:reset": "tsx prisma/scripts/reset-db.ts",
+    "admin:promote": "tsx prisma/scripts/admin-role.ts promote",
+    "admin:demote": "tsx prisma/scripts/admin-role.ts demote",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@tienda/eslint-config": "workspace:*",
     "@tienda/typescript-config": "workspace:*",
+    "@types/node": "^22.10.1",
     "prisma": "^5.22.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"

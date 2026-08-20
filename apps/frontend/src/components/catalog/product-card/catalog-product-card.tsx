@@ -66,24 +66,28 @@ export function CatalogProductCard({ product, viewMode = 'grid', className }: Ca
           <p className="text-xs text-muted-foreground mt-0.5">SKU: {product.sku}</p>
         )}
 
-        <div className={cn('flex items-baseline gap-2', isGrid ? 'mt-1.5' : 'mt-1')}>
-          <span className={cn('font-bold text-foreground', isGrid ? 'text-base' : 'text-lg')}>
-            {formatPrice(product.price)}
-          </span>
-          {product.originalPrice && (
-            <span className="text-xs text-muted-foreground line-through">{formatPrice(product.originalPrice)}</span>
-          )}
-        </div>
+        {product.price > 0 && (
+          <div className={cn('flex items-baseline gap-2', isGrid ? 'mt-1.5' : 'mt-1')}>
+            <span className={cn('font-bold text-foreground', isGrid ? 'text-base' : 'text-lg')}>
+              {formatPrice(product.price)}
+            </span>
+            {product.originalPrice && (
+              <span className="text-xs text-muted-foreground line-through">{formatPrice(product.originalPrice)}</span>
+            )}
+          </div>
+        )}
 
-        <div className="flex items-center gap-2 mt-0.5">
-          <Rating value={product.rating} size="sm" />
-          <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
-        </div>
+        {product.price > 0 && (
+          <div className="flex items-center gap-2 mt-0.5">
+            <Rating value={product.rating} size="sm" />
+            <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
+          </div>
+        )}
 
         <div className="flex items-center gap-2 mt-1">
           {product.inStock ? (
-            <span className={cn('text-xs font-medium', product.stockCount <= 5 ? 'text-warning' : 'text-success')}>
-              {product.stockCount <= 5 ? `Solo ${product.stockCount} restantes` : 'En stock'}
+            <span className={cn('text-xs font-medium', product.stockCount > 0 && product.stockCount <= 5 ? 'text-warning' : 'text-success')}>
+              {product.stockCount > 0 && product.stockCount <= 5 ? `Solo ${product.stockCount} restantes` : 'En stock'}
             </span>
           ) : (
             <span className="text-xs text-destructive font-medium">Sin stock</span>

@@ -1,8 +1,10 @@
 import {
   Controller, Get, Post, Patch, Delete,
   Body, Param, Query, Headers,
-  HttpCode, HttpStatus,
+  HttpCode, HttpStatus, UseGuards,
 } from '@nestjs/common';
+import { AuthenticationGuard } from '@modules/authentication/presentation/guards/auth.guard';
+import { PermissionGuard } from '@modules/authorization/presentation/guards/permission.guard';
 import { VariantAppService } from '../../../services';
 import {
   CreateVariantDto, UpdateVariantDto,
@@ -12,6 +14,7 @@ import {
 import type { VariantResponseDto, PaginatedVariantResponseDto } from '../../../application/dto';
 
 @Controller()
+@UseGuards(AuthenticationGuard, PermissionGuard)
 export class VariantController {
   constructor(private readonly variantAppService: VariantAppService) {}
 

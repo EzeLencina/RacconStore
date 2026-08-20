@@ -7,6 +7,11 @@ export const navigationConfig = {
   admin: [
     { label: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
     { label: 'Productos', href: '/admin/productos', icon: 'Package' },
+    { label: 'Categorías', href: '/admin/categorias', icon: 'LayoutList' },
+    { label: 'Marcas', href: '/admin/marcas', icon: 'Tag' },
+    { label: 'Colecciones', href: '/admin/colecciones', icon: 'Layers' },
+    { label: 'Atributos', href: '/admin/atributos', icon: 'Tags' },
+    { label: 'Importar/Exportar', href: '/admin/imports', icon: 'FileUp' },
     { label: 'Inventario', href: '/admin/inventario', icon: 'Warehouse' },
     { label: 'Pedidos', href: '/admin/pedidos', icon: 'ShoppingCart' },
     { label: 'Clientes', href: '/admin/clientes', icon: 'Users' },

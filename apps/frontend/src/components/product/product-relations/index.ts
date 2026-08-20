@@ -1,0 +1,1 @@
+export { ProductRelations } from './product-relations';

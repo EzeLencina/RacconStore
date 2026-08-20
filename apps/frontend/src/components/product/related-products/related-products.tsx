@@ -6,23 +6,26 @@ import { cn } from '@lib/helpers/cn';
 import { CatalogProductCard } from '@components/catalog';
 import { getRelatedProducts, pdpProducts } from '../mock-data';
 import type { PDPProduct } from '../mock-data';
+import type { RelationCard } from '@lib/products/relations';
 
 type RelatedProductsProps = {
   product: PDPProduct;
   title?: string;
   className?: string;
+  items?: RelationCard[];
 };
 
 export function RelatedProducts({
   product,
   title = 'Productos relacionados',
   className,
+  items,
 }: RelatedProductsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const related = getRelatedProducts(product.relatedSlugs);
+  const related = items ?? getRelatedProducts(product.relatedSlugs);
 
   if (related.length === 0) return null;
 
@@ -41,6 +44,31 @@ export function RelatedProducts({
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
   };
+
+  const toCard = (p: PDPProduct | RelationCard) =>
+    'crossSellSlugs' in p ? {
+      ...p,
+      brand: '',
+      brandSlug: '',
+      category: '',
+      categorySlug: '',
+      subcategory: '',
+      subcategorySlug: '',
+      images: [],
+      image: '',
+      originalPrice: undefined,
+      discount: undefined,
+      rating: 0,
+      reviewCount: 0,
+      badge: undefined,
+      badgeVariant: undefined,
+      stockCount: 0,
+      isNew: undefined,
+      isFeatured: undefined,
+      estimatedDelivery: '',
+      warranty: '',
+      specs: {},
+    } : p;
 
   return (
     <section className={cn('space-y-4', className)} aria-labelledby="related-heading">
@@ -75,37 +103,7 @@ export function RelatedProducts({
       >
         {related.map((p) => (
           <div key={p.id} className="min-w-[220px] sm:min-w-[240px] max-w-[260px] snap-start">
-            <CatalogProductCard
-              product={{
-                id: p.id,
-                name: p.name,
-                slug: p.slug,
-                sku: p.sku,
-                brand: p.brand,
-                brandSlug: p.brandSlug,
-                category: p.category,
-                categorySlug: p.categorySlug,
-                subcategory: p.subcategory,
-                subcategorySlug: p.subcategorySlug,
-                price: p.price,
-                originalPrice: p.originalPrice,
-                discount: p.discount,
-                rating: p.rating,
-                reviewCount: p.reviewCount,
-                image: p.images[0]?.src ?? '',
-                images: p.images.map((i) => i.src),
-                badge: p.badge,
-                badgeVariant: p.badgeVariant,
-                inStock: p.inStock,
-                stockCount: p.stockCount,
-                isNew: p.isNew,
-                isFeatured: p.isFeatured,
-                estimatedDelivery: p.estimatedDelivery,
-                warranty: p.warranty,
-                specs: p.specs,
-              }}
-              viewMode="grid"
-            />
+            <CatalogProductCard product={toCard(p)} viewMode="grid" />
           </div>
         ))}
       </div>

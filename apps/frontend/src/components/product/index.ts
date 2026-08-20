@@ -13,6 +13,7 @@ export { ProductReviews } from './reviews';
 export { ProductQuestions } from './questions';
 export { RelatedProducts } from './related-products';
 export { CrossSelling } from './cross-selling';
+export { ProductRelations } from './product-relations';
 export { StickyBuyBox } from './sticky-buy-box';
 export { getProductBySlug, getRelatedProducts, pdpProducts } from './mock-data';
 export type {

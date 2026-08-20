@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "@tienda/shared",
   "version": "0.0.0",
   "private": true,
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@tienda/eslint-config": "workspace:*",
     "@tienda/tsconfig": "workspace:*",
+    "@types/node": "^22.10.1",
     "typescript": "^5.6.3"
   }
 }

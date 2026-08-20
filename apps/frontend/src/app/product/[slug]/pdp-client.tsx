@@ -13,8 +13,7 @@ import {
   ProductDescription,
   ProductReviews,
   ProductQuestions,
-  RelatedProducts,
-  CrossSelling,
+  ProductRelations,
   StickyBuyBox,
 } from '@components/product';
 import type { PDPProduct } from '@components/product';
@@ -51,8 +50,7 @@ export function PDPClient({ product }: PDPClientProps) {
           <div className="mt-12 lg:mt-16 space-y-12 lg:space-y-16">
             <ProductReviews product={product} />
             <ProductQuestions product={product} />
-            <RelatedProducts product={product} />
-            <CrossSelling product={product} />
+            <ProductRelations product={product} />
           </div>
         </Container>
       </Section>

@@ -1,7 +1,6 @@
 export {
   heroSlides,
   homeCategories,
-  featuredProducts,
   dealProducts,
   brands,
   benefits,

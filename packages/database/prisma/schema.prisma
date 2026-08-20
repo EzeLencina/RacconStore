@@ -45,12 +45,23 @@ model Product {
   /// Soft delete
   deletedAt         DateTime?
 
+  /// Scheduled publication window (UTC; effective status computed at read time)
+  publishAt         DateTime?
+  unpublishAt       DateTime?
+
   /// Optimistic concurrency
   version           Int           @default(1)
 
   /// Timestamps
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+
+  /// Product-to-product relations (source side)
+  sourceRelations  ProductRelation[] @relation("ProductSourceRelations")
+  /// Product-to-product relations (target side)
+  targetRelations  ProductRelation[] @relation("ProductTargetRelations")
+  /// Collection memberships
+  collections      ProductCollection[]
 
   /// Constraints
   @@unique([tenantId, slug])
@@ -62,6 +73,37 @@ model Product {
   @@index([tenantId, updatedAt])
   @@index([tenantId, deletedAt])
   @@map("products")
+}
+
+/// Typed product-to-product relation (tenant-scoped).
+enum ProductRelationType {
+  /// Similar / semantically related products
+  RELATED
+  /// Equivalent alternatives for the same need
+  ALTERNATIVE
+  /// Products commonly bought together
+  COMPLEMENTARY
+}
+
+/// Directed relation: sourceProduct → targetProduct, typed and ordered.
+/// Enforced at app layer: no self-reference, no duplicates, same tenant.
+model ProductRelation {
+  id              String             @id @default(cuid())
+  tenantId        String
+  sourceProductId String
+  targetProductId String
+  type            ProductRelationType
+  position        Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  sourceProduct Product @relation("ProductSourceRelations", fields: [sourceProductId], references: [id], onDelete: Cascade)
+  targetProduct Product @relation("ProductTargetRelations", fields: [targetProductId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, sourceProductId, targetProductId, type])
+  @@index([tenantId, sourceProductId, type, position])
+  @@index([tenantId, targetProductId])
+  @@map("product_relations")
 }
 
 /// Product type classification
@@ -196,6 +238,8 @@ model Collection {
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
 
+  products        ProductCollection[]
+
   @@unique([tenantId, slug])
   @@index([tenantId])
   @@index([tenantId, status])
@@ -225,6 +269,9 @@ model ProductCollection {
   collectionId String
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
+
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@id([tenantId, productId, collectionId])
   @@index([tenantId, collectionId])
@@ -1168,4 +1215,175 @@ model IdempotencyRecord {
   @@unique([tenantId, key, operation])
   @@index([tenantId, createdAt])
   @@map("idempotency_records")
+}
+
+/// ── Identity & RBAC Domain ────────────────────────────────
+
+/// User lifecycle status
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+/// Built-in role names (system roles)
+enum RoleName {
+  CUSTOMER
+  ADMIN
+}
+
+/// Immutable audit event types
+enum AuditAction {
+  AUTH_REGISTER
+  AUTH_LOGIN
+  AUTH_LOGOUT
+  ROLE_PROMOTE
+  ROLE_DEMOTE
+  PRODUCT_RELATION_ADD
+  PRODUCT_RELATION_REMOVE
+  PRODUCT_RELATION_REORDER
+  PRODUCT_FEATURED_ADD
+  PRODUCT_FEATURED_REMOVE
+  PRODUCT_FEATURED_REORDER
+  PRODUCT_PUBLISH
+  PRODUCT_DEACTIVATE
+  PRODUCT_ARCHIVE
+  PRODUCT_RESTORE
+  PRODUCT_SCHEDULE
+  PRODUCT_CANCEL_SCHEDULE
+  PRODUCT_IMPORT_PREVIEW
+  PRODUCT_IMPORT_CONFIRM
+  PRODUCT_EXPORT
+}
+
+/// User account aggregate root (tenant-scoped).
+/// PostgreSQL is the single authority for users, roles and permissions.
+model User {
+  id            String     @id @default(cuid())
+  tenantId      String
+  email         String
+  name          String?
+  passwordHash  String
+  status        UserStatus @default(ACTIVE)
+  emailVerified Boolean    @default(false)
+  lastLoginAt   DateTime?
+  deletedAt     DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  sessions   Session[]
+  roles      UserRole[]
+  auditLogs  AuditLog[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+  @@map("users")
+}
+
+/// RBAC role (tenant-scoped). System roles (CUSTOMER, ADMIN) are seeded.
+model Role {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        RoleName
+  code        String
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, name])
+  @@map("roles")
+}
+
+/// Granular permission (resource + action), e.g. `products:manage`.
+model Permission {
+  id          String   @id @default(cuid())
+  tenantId    String
+  code        String
+  resource    String
+  action      String
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles       RolePermission[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, resource, action])
+  @@map("permissions")
+}
+
+/// Many-to-many user ↔ role assignment
+model UserRole {
+  tenantId   String
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+  assignedBy String?
+
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([tenantId, userId, roleId])
+  @@index([tenantId, roleId])
+  @@map("user_roles")
+}
+
+/// Many-to-many role ↔ permission assignment
+model RolePermission {
+  tenantId     String
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([tenantId, roleId, permissionId])
+  @@index([tenantId, permissionId])
+  @@map("role_permissions")
+}
+
+/// Persistent server-side auth session (token stored in httpOnly cookie)
+model Session {
+  id         String   @id
+  tenantId   String
+  userId     String
+  expiresAt  DateTime
+  lastUsedAt DateTime @default(now())
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId])
+  @@index([tenantId, expiresAt])
+  @@map("sessions")
+}
+
+/// Immutable audit log (register, login, logout, promote, demote)
+model AuditLog {
+  id         String      @id @default(cuid())
+  tenantId   String
+  actorId    String?
+  actorEmail String?
+  action     AuditAction
+  entityType String?
+  entityId   String?
+  metadata   Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  actor      User?       @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, action, createdAt])
+  @@index([tenantId, actorId, createdAt])
+  @@index([tenantId, entityType, entityId])
+  @@map("audit_logs")
 }

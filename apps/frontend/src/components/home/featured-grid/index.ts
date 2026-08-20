@@ -1,0 +1,1 @@
+export { FeaturedGrid } from './featured-grid';

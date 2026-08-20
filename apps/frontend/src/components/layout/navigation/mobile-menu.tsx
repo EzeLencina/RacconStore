@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { X, ChevronRight, ChevronDown, User, ShoppingCart, Heart, Settings, Package, LogOut, Menu } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { categories, mainNavPages, accountPages } from '@lib/layout/navigation';
@@ -12,6 +13,7 @@ type MobileMenuProps = {
 };
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const router = useRouter();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
 
@@ -108,6 +110,15 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               ))}
               <button
                 type="button"
+                onClick={async () => {
+                  try {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                  } finally {
+                    onClose();
+                    router.push('/');
+                    router.refresh();
+                  }
+                }}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <LogOut className="h-4 w-4" />

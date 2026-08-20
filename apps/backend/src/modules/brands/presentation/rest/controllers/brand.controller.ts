@@ -11,12 +11,16 @@ import {
   Headers,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthenticationGuard } from '@modules/authentication/presentation/guards/auth.guard';
+import { PermissionGuard } from '@modules/authorization/presentation/guards/permission.guard';
 import { BrandAppService } from '../../../services';
 import { CreateBrandDto, UpdateBrandDto, BrandListQueryDto } from '../dto';
 import type { BrandResponseDto, PaginatedBrandResponseDto } from '../../../application/dto';
 
 @Controller('brands')
+@UseGuards(AuthenticationGuard, PermissionGuard)
 export class BrandController {
   constructor(private readonly brandAppService: BrandAppService) {}
 

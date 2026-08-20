@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "products" ADD COLUMN "publishAt" TIMESTAMP(3),
+ADD COLUMN "unpublishAt" TIMESTAMP(3);
+
+-- AlterEnum
+ALTER TYPE "AuditAction" ADD VALUE 'PRODUCT_SCHEDULE';
+ALTER TYPE "AuditAction" ADD VALUE 'PRODUCT_CANCEL_SCHEDULE';
