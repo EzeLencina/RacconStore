@@ -1,5 +1,5 @@
 import { Breadcrumb } from '@components/layout';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductBreadcrumbsProps = {
   product: PDPProduct;

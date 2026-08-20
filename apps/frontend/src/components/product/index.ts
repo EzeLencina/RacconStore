@@ -15,8 +15,17 @@ export { RelatedProducts } from './related-products';
 export { CrossSelling } from './cross-selling';
 export { ProductRelations } from './product-relations';
 export { StickyBuyBox } from './sticky-buy-box';
-export { getProductBySlug, getRelatedProducts, pdpProducts } from './mock-data';
+
 export type {
-  PDPProduct, ProductImage, ProductVideo, ProductVariant,
-  ProductReview, ProductQuestion, ShippingOption,
-} from './mock-data';
+  PDPProduct,
+  ProductImage,
+  ProductVideo,
+  ProductVariant,
+  ProductReview,
+  ProductQuestion,
+  ShippingOption,
+  StorefrontProduct,
+  StorefrontCategory,
+  StorefrontBrand,
+  StorefrontPDPProduct,
+} from '@lib/storefront/types';

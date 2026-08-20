@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Share2, Check } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductShareProps = {
   product: PDPProduct;
@@ -13,7 +13,7 @@ type ProductShareProps = {
 export function ProductShare({ product, className }: ProductShareProps) {
   const [copied, setCopied] = useState(false);
 
-  const url = typeof window !== 'undefined' ? window.location.href : `/producto/${product.slug}`;
+  const url = typeof window !== 'undefined' ? window.location.href : `/product/${product.slug}`;
 
   const handleShare = async () => {
     if (navigator.share) {

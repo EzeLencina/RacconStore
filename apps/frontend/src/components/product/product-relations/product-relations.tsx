@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { RelatedProducts } from '../related-products/related-products';
 import { CrossSelling } from '../cross-selling/cross-selling';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 import type { RelationCard } from '@lib/products/relations';
 
 type ProductRelationsProps = {
@@ -42,8 +42,8 @@ export function ProductRelations({ product }: ProductRelationsProps) {
 
   return (
     <>
-      <RelatedProducts product={product} items={related} />
-      <CrossSelling product={product} items={complementary} />
+      <RelatedProducts items={related} />
+      <CrossSelling items={complementary} />
     </>
   );
 }

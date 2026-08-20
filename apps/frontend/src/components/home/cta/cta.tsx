@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { ctaSection } from '@lib/home/mock-data';
+import { ctaSection } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 import { Button } from '@tienda/ui';
 

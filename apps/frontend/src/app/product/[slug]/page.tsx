@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getProductBySlug, pdpProducts } from '@components/product';
+import { getTenantId } from '@lib/auth/tenant';
+import { getPublicProductBySlug } from '@lib/storefront/catalog';
 import { ProductSchema, BreadcrumbSchema } from '@components/seo';
 import { buildProductMetadata } from '@lib/seo';
 import { PDPClient } from './pdp-client';
@@ -9,13 +10,9 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return pdpProducts.map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getPublicProductBySlug(getTenantId(), slug);
 
   if (!product) return { title: 'Producto no encontrado | Tienda' };
 
@@ -30,15 +27,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getPublicProductBySlug(getTenantId(), slug);
 
   if (!product) notFound();
 
   const breadcrumbItems = [
     { name: 'Inicio', item: '/' },
-    { name: product.category, item: `/categoria/${product.categorySlug}` },
-    ...(product.subcategory
-      ? [{ name: product.subcategory, item: `/categoria/${product.categorySlug}/${product.subcategorySlug}` }]
+    { name: 'Catálogo', item: '/catalogo' },
+    ...(product.categorySlug
+      ? [{ name: product.category, item: `/categoria/${product.categorySlug}` }]
       : []),
   ];
 

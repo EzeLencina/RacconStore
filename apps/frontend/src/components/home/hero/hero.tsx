@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { Button } from '@tienda/ui';
-import { heroSlides, type HeroSlide } from '@lib/home/mock-data';
+import { heroSlides, type HeroSlide } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 
 export type HeroProps = {

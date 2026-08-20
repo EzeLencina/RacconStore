@@ -77,7 +77,7 @@ export function buildProductMetadata(
   return buildMetadata({
     title: `${name} — ${SITE_NAME}`,
     description,
-    path: `/producto/${slug}`,
+    path: `/product/${slug}`,
     images,
   });
 }

@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2, X, Play } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { Dialog, DialogContent, DialogTitle } from '@tienda/ui';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductGalleryProps = {
   product: PDPProduct;

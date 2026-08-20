@@ -1,13 +1,19 @@
 import { cn } from '@lib/helpers/cn';
 import { Container } from '@components/layout/containers/container';
 import { SectionTitle } from '@tienda/ui';
+import type { StorefrontProduct } from '@lib/storefront/types';
 import { FeaturedGrid } from '../featured-grid';
 
 type FeaturedProductsProps = {
+  items?: StorefrontProduct[];
   className?: string;
 };
 
-export function FeaturedProducts({ className }: FeaturedProductsProps) {
+export function FeaturedProducts({ items, className }: FeaturedProductsProps) {
+  const products = items ?? [];
+
+  if (products.length === 0) return null;
+
   return (
     <section className={cn('py-12 sm:py-16 bg-muted/30', className)}>
       <Container size="xl">
@@ -17,7 +23,7 @@ export function FeaturedProducts({ className }: FeaturedProductsProps) {
           align="center"
           spacing="loose"
         />
-        <FeaturedGrid />
+        <FeaturedGrid items={products} />
       </Container>
     </section>
   );

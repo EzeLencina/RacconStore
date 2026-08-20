@@ -1,7 +1,7 @@
 import { Badge } from '@tienda/ui';
 import { ShieldCheck } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductInfoProps = {
   product: PDPProduct;
@@ -27,9 +27,13 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
         <span className="font-medium text-foreground">SKU: {product.sku}</span>
         <span className="text-muted-foreground/50" aria-hidden="true">|</span>
-        <a href={`/marca/${product.brandSlug}`} className="hover:text-primary transition-colors font-medium text-foreground">
-          {product.brand}
-        </a>
+        {product.brandSlug ? (
+          <a href={`/catalogo?brand=${product.brandSlug}`} className="hover:text-primary transition-colors font-medium text-foreground">
+            {product.brand}
+          </a>
+        ) : (
+          <span className="font-medium text-foreground">{product.brand}</span>
+        )}
         <span className="text-muted-foreground/50" aria-hidden="true">|</span>
         <span>Modelo: {product.model}</span>
       </div>

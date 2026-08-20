@@ -4,10 +4,10 @@ import { Heart, ArrowLeftRight, Eye, ShoppingCart, Truck } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { formatPrice } from '@tienda/ui';
 import { Badge, Rating, Button } from '@tienda/ui';
-import type { CatalogProduct } from '@lib/catalog/mock-data';
+import type { StorefrontProduct } from '@lib/storefront/types';
 
 type CatalogProductCardProps = {
-  product: CatalogProduct;
+  product: StorefrontProduct;
   viewMode?: 'grid' | 'list';
   className?: string;
 };
@@ -54,15 +54,17 @@ export function CatalogProductCard({ product, viewMode = 'grid', className }: Ca
       </div>
 
       <div className={cn('flex flex-col flex-1', isGrid ? 'p-3 sm:p-4' : 'p-3 sm:p-4 justify-center')}>
-        <p className="text-xs text-muted-foreground mb-0.5">{product.brand}</p>
+        {product.brand && (
+          <p className="text-xs text-muted-foreground mb-0.5">{product.brand}</p>
+        )}
 
-        <a href={`/producto/${product.slug}`} className="block">
+        <a href={`/product/${product.slug}`} className="block">
           <h3 className={cn('font-medium text-foreground hover:text-primary transition-colors line-clamp-2', isGrid ? 'text-sm' : 'text-sm sm:text-base')}>
             {product.name}
           </h3>
         </a>
 
-        {!isGrid && (
+        {!isGrid && product.sku && (
           <p className="text-xs text-muted-foreground mt-0.5">SKU: {product.sku}</p>
         )}
 
@@ -94,18 +96,20 @@ export function CatalogProductCard({ product, viewMode = 'grid', className }: Ca
           )}
         </div>
 
-        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-          <Truck className="h-3 w-3" />
-          <span>Entrega estimada: {product.estimatedDelivery}</span>
-        </div>
+        {product.estimatedDelivery && (
+          <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+            <Truck className="h-3 w-3" />
+            <span>Entrega estimada: {product.estimatedDelivery}</span>
+          </div>
+        )}
 
         {isGrid && (
           <div className="flex gap-2 mt-3">
             <Button size="sm" fullWidth asChild>
-              <a href={`/producto/${product.slug}`}>Comprar</a>
+              <a href={`/product/${product.slug}`}>Comprar</a>
             </Button>
             <Button variant="outline" size="sm" className="shrink-0" asChild>
-              <a href={`/producto/${product.slug}`} aria-label="Ver detalle">
+              <a href={`/product/${product.slug}`} aria-label="Ver detalle">
                 <Eye className="h-4 w-4" />
               </a>
             </Button>
@@ -115,13 +119,13 @@ export function CatalogProductCard({ product, viewMode = 'grid', className }: Ca
         {!isGrid && (
           <div className="flex gap-2 mt-3">
             <Button size="sm" asChild>
-              <a href={`/producto/${product.slug}`}>
+              <a href={`/product/${product.slug}`}>
                 <ShoppingCart className="h-4 w-4" />
                 Comprar
               </a>
             </Button>
             <Button variant="outline" size="sm" asChild>
-              <a href={`/producto/${product.slug}`}>Ver detalle</a>
+              <a href={`/product/${product.slug}`}>Ver detalle</a>
             </Button>
           </div>
         )}

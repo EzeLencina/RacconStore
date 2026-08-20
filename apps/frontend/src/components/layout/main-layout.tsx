@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Header } from './header/header';
 import { Footer } from './footer/footer';
 import { SkipToContent } from './skip-to-content';
+import type { StorefrontCategory } from '@lib/storefront/types';
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -9,6 +10,7 @@ type MainLayoutProps = {
   showTopBar?: boolean;
   hideOnScroll?: boolean;
   showNewsletter?: boolean;
+  categories?: StorefrontCategory[];
 };
 
 export function MainLayout({
@@ -17,6 +19,7 @@ export function MainLayout({
   showTopBar = true,
   hideOnScroll = true,
   showNewsletter = true,
+  categories,
 }: MainLayoutProps) {
   return (
     <>
@@ -25,6 +28,7 @@ export function MainLayout({
         showAnnouncement={showAnnouncement}
         showTopBar={showTopBar}
         hideOnScroll={hideOnScroll}
+        categories={categories}
       />
       <main id="main-content" className="min-h-screen">
         {children}

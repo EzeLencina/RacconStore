@@ -1,5 +1,4 @@
 import { cn } from '@lib/helpers/cn';
-import { Button } from '@tienda/ui';
 import {
   Pagination,
   PaginationContent,
@@ -13,22 +12,12 @@ import {
 type CatalogPaginationProps = {
   currentPage: number;
   totalPages: number;
-  variant?: 'pagination' | 'load-more';
+  buildHref: (page: number) => string;
   className?: string;
 };
 
-export function CatalogPagination({ currentPage, totalPages, variant = 'pagination', className }: CatalogPaginationProps) {
+export function CatalogPagination({ currentPage, totalPages, buildHref, className }: CatalogPaginationProps) {
   if (totalPages <= 1) return null;
-
-  if (variant === 'load-more') {
-    return (
-      <div className={cn('flex justify-center pt-6', className)}>
-        <Button variant="outline" size="lg">
-          Cargar más productos
-        </Button>
-      </div>
-    );
-  }
 
   const pages: (number | 'ellipsis')[] = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -44,7 +33,7 @@ export function CatalogPagination({ currentPage, totalPages, variant = 'paginati
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#"
+            href={buildHref(Math.max(1, currentPage - 1))}
             aria-label="Ir a página anterior"
             className={currentPage <= 1 ? 'pointer-events-none opacity-40' : ''}
           />
@@ -58,7 +47,7 @@ export function CatalogPagination({ currentPage, totalPages, variant = 'paginati
           ) : (
             <PaginationItem key={page}>
               <PaginationLink
-                href="#"
+                href={buildHref(page)}
                 isActive={page === currentPage}
                 aria-label={`Ir a página ${page}`}
                 aria-current={page === currentPage ? 'page' : undefined}
@@ -71,7 +60,7 @@ export function CatalogPagination({ currentPage, totalPages, variant = 'paginati
 
         <PaginationItem>
           <PaginationNext
-            href="#"
+            href={buildHref(Math.min(totalPages, currentPage + 1))}
             aria-label="Ir a página siguiente"
             className={currentPage >= totalPages ? 'pointer-events-none opacity-40' : ''}
           />

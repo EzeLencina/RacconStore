@@ -7,7 +7,7 @@ import { cn } from '@lib/helpers/cn';
 import { formatPrice } from '@tienda/ui';
 import { ProductStock } from '../stock';
 import { ProductShare } from '../share';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type PurchaseBoxProps = {
   product: PDPProduct;

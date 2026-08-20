@@ -1,6 +1,6 @@
 import { cn } from '@lib/helpers/cn';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@tienda/ui';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductDescriptionProps = {
   product: PDPProduct;

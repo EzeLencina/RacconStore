@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ChevronDown, ThumbsUp, ShieldCheck, Star } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { Rating, Button } from '@tienda/ui';
-import type { PDPProduct, ProductReview } from '../mock-data';
+import type { PDPProduct, ProductReview } from '@lib/storefront/types';
 
 type ProductReviewsProps = {
   product: PDPProduct;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Search, MessageSquare, ChevronDown, ThumbsUp } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { Input, Button } from '@tienda/ui';
-import type { PDPProduct, ProductQuestion } from '../mock-data';
+import type { PDPProduct, ProductQuestion } from '@lib/storefront/types';
 
 type ProductQuestionsProps = {
   product: PDPProduct;

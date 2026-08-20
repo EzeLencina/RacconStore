@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingCart, Heart, User, Menu, ArrowLeftRight, Store } from 'lucide-react';
+import { ShoppingCart, Heart, User, Menu, Store } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
 import { useMegaMenu } from '../hooks/use-mega-menu';
 import { Container } from '../containers/container';
@@ -11,15 +11,23 @@ import { MobileMenu } from '../navigation/mobile-menu';
 import { AnnouncementBar } from '../announcement/announcement-bar';
 import { TopBar } from '../navigation/top-bar';
 import { announcementConfig, mainNavPages } from '@lib/layout/navigation';
+import type { StorefrontCategory } from '@lib/storefront/types';
 
 export type HeaderProps = {
   className?: string;
   showAnnouncement?: boolean;
   showTopBar?: boolean;
   hideOnScroll?: boolean;
+  categories?: StorefrontCategory[];
 };
 
-export function Header({ className, showAnnouncement = true, showTopBar = true, hideOnScroll = true }: HeaderProps) {
+export function Header({
+  className,
+  showAnnouncement = true,
+  showTopBar = true,
+  hideOnScroll = true,
+  categories,
+}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { activeCategory, open: openMega, close: closeMega } = useMegaMenu();
 
@@ -73,7 +81,7 @@ export function Header({ className, showAnnouncement = true, showTopBar = true, 
 
             <div className="flex items-center gap-1">
               <a
-                href="/cuenta"
+                href="/account"
                 className="hidden sm:inline-flex items-center justify-center rounded-lg p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Mi cuenta"
               >
@@ -81,7 +89,7 @@ export function Header({ className, showAnnouncement = true, showTopBar = true, 
               </a>
 
               <a
-                href="/cuenta/favoritos"
+                href="/account/favorites"
                 className="relative hidden sm:inline-flex items-center justify-center rounded-lg p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Favoritos"
               >
@@ -94,15 +102,7 @@ export function Header({ className, showAnnouncement = true, showTopBar = true, 
               </a>
 
               <a
-                href="/compara"
-                className="hidden sm:inline-flex items-center justify-center rounded-lg p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Comparador"
-              >
-                <ArrowLeftRight className="h-5 w-5" />
-              </a>
-
-              <a
-                href="/carrito"
+                href="/cart"
                 className="relative inline-flex items-center justify-center rounded-lg p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={`Carrito${cartCount > 0 ? `, ${cartCount} productos` : ''}`}
               >
@@ -118,6 +118,7 @@ export function Header({ className, showAnnouncement = true, showTopBar = true, 
 
           <div className="hidden lg:flex pb-2">
             <MegaMenu
+              categories={categories}
               activeCategory={activeCategory}
               onOpen={openMega}
               onClose={closeMega}
@@ -130,7 +131,7 @@ export function Header({ className, showAnnouncement = true, showTopBar = true, 
         </Container>
       </header>
 
-      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} categories={categories} />
     </>
   );
 }

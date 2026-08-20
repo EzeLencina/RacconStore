@@ -3,18 +3,19 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { sortOptions } from '@lib/catalog/mock-data';
+import type { StorefrontSortOption, StorefrontSortValue } from '@lib/storefront/types';
 
 type CatalogSortingProps = {
+  options: StorefrontSortOption[];
+  value: StorefrontSortValue;
+  onSortChange: (value: StorefrontSortValue) => void;
   className?: string;
-  defaultValue?: string;
 };
 
-export function CatalogSorting({ className, defaultValue = 'relevance' }: CatalogSortingProps) {
+export function CatalogSorting({ options, value, onSortChange, className }: CatalogSortingProps) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(defaultValue);
 
-  const current = sortOptions.find((o) => o.value === selected);
+  const current = options.find((o) => o.value === value);
 
   return (
     <div className={cn('relative', className)}>
@@ -38,17 +39,20 @@ export function CatalogSorting({ className, defaultValue = 'relevance' }: Catalo
             role="listbox"
             aria-label="Sort options"
           >
-            {sortOptions.map((opt) => (
+            {options.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => { setSelected(opt.value); setOpen(false); }}
+                onClick={() => {
+                  onSortChange(opt.value);
+                  setOpen(false);
+                }}
                 className={cn(
                   'flex w-full items-center rounded-md px-3 py-2 text-sm transition-colors',
-                  selected === opt.value ? 'bg-accent text-accent-foreground font-medium' : 'hover:bg-accent text-muted-foreground',
+                  value === opt.value ? 'bg-accent text-accent-foreground font-medium' : 'hover:bg-accent text-muted-foreground',
                 )}
                 role="option"
-                aria-selected={selected === opt.value}
+                aria-selected={value === opt.value}
               >
                 {opt.label}
               </button>

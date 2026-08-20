@@ -4,6 +4,7 @@ import { Button } from '@tienda/ui';
 
 type CatalogEmptyStateProps = {
   variant?: 'no-results' | 'no-products' | 'error';
+  ctaHref?: string;
   className?: string;
 };
 
@@ -28,9 +29,19 @@ const content = {
   },
 };
 
-export function CatalogEmptyState({ variant = 'no-results', className }: CatalogEmptyStateProps) {
+export function CatalogEmptyState({ variant = 'no-results', ctaHref, className }: CatalogEmptyStateProps) {
   const data = content[variant];
   const Icon = data.icon;
+
+  const cta = ctaHref ? (
+    <Button variant="outline" className="mt-6" asChild>
+      <a href={ctaHref}>{data.cta}</a>
+    </Button>
+  ) : (
+    <Button variant="outline" className="mt-6">
+      {data.cta}
+    </Button>
+  );
 
   return (
     <div className={cn('flex flex-col items-center justify-center py-16 px-4 text-center', className)}>
@@ -39,9 +50,7 @@ export function CatalogEmptyState({ variant = 'no-results', className }: Catalog
       </div>
       <h3 className="text-lg font-semibold text-foreground">{data.title}</h3>
       <p className="mt-2 text-sm text-muted-foreground max-w-md">{data.description}</p>
-      <Button variant="outline" className="mt-6">
-        {data.cta}
-      </Button>
+      {cta}
     </div>
   );
 }

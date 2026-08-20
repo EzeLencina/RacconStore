@@ -1,6 +1,6 @@
 import { Truck, ShieldCheck, Headphones, Lock, CreditCard, BadgeCheck } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { benefits } from '@lib/home/mock-data';
+import { benefits } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 
 type BenefitsProps = {

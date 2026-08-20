@@ -68,12 +68,12 @@ export function productSchema(product: {
     category: product.category,
     offers: product.offers ?? {
       '@type': 'Offer' as const,
-      price: product.price / 100,
+      price: product.price,
       priceCurrency: 'ARS',
       availability: product.inStock
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: `${SITE_URL}/producto/${product.slug}`,
+      url: `${SITE_URL}/product/${product.slug}`,
     },
     image: product.images.map((i) => i.src),
     ...(product.rating && {

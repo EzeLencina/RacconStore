@@ -1,9 +1,9 @@
 import { cn } from '@lib/helpers/cn';
 import { CatalogProductCard } from '../product-card/catalog-product-card';
-import type { CatalogProduct } from '@lib/catalog/mock-data';
+import type { StorefrontProduct } from '@lib/storefront/types';
 
 type ProductGridProps = {
-  products: CatalogProduct[];
+  products: StorefrontProduct[];
   viewMode: 'grid' | 'list';
   className?: string;
 };

@@ -1,19 +1,26 @@
 'use client';
 
-import { useCallback } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { categories, featuredBrands, type NavCategory } from '@lib/layout/navigation';
-import { Container } from '../containers/container';
+import type { StorefrontCategory } from '@lib/storefront/types';
 
 type MegaMenuProps = {
+  categories?: StorefrontCategory[];
   activeCategory: string | null;
   onOpen: (id: string) => void;
   onClose: () => void;
   className?: string;
 };
 
-export function MegaMenu({ activeCategory, onOpen, onClose, className }: MegaMenuProps) {
+export function MegaMenu({
+  categories = [],
+  activeCategory,
+  onOpen,
+  onClose,
+  className,
+}: MegaMenuProps) {
+  if (categories.length === 0) return null;
+
   return (
     <nav className={cn('hidden lg:block', className)} aria-label="Main navigation">
       <ul className="flex items-center gap-1">
@@ -32,7 +39,7 @@ export function MegaMenu({ activeCategory, onOpen, onClose, className }: MegaMen
 }
 
 type MegaMenuItemProps = {
-  category: NavCategory;
+  category: StorefrontCategory;
   isActive: boolean;
   onOpen: (id: string) => void;
   onClose: () => void;
@@ -104,35 +111,13 @@ function MegaMenuItem({ category, isActive, onOpen, onClose }: MegaMenuItemProps
             </div>
 
             <div className="col-span-1 space-y-4">
-              {category.brands && category.brands.length > 0 && (
-                <div>
-                  <span className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                    Marcas
-                  </span>
-                  <ul className="space-y-1">
-                    {category.brands.map((brand) => (
-                      <li key={brand.id}>
-                        <a
-                          href={brand.href}
-                          className="block text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-1 py-0.5"
-                        >
-                          {brand.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {category.featured && (
-                <a
-                  href={category.href}
-                  className="block rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 p-4 text-center"
-                >
-                  <span className="block text-sm font-semibold text-primary">Ver todo</span>
-                  <span className="block text-xs text-muted-foreground mt-1">{category.name}</span>
-                </a>
-              )}
+              <a
+                href={category.href}
+                className="block rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 p-4 text-center"
+              >
+                <span className="block text-sm font-semibold text-primary">Ver todo</span>
+                <span className="block text-xs text-muted-foreground mt-1">{category.name}</span>
+              </a>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import { cn } from '@lib/helpers/cn';
-import { testimonials } from '@lib/home/mock-data';
+import { testimonials } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 import { SectionTitle, Avatar, AvatarImage, AvatarFallback, Rating } from '@tienda/ui';
 import { formatPrice } from '@tienda/ui';

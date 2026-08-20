@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Clock, ArrowRight, Zap } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { dealProducts } from '@lib/home/mock-data';
+import { dealsCountdownTarget } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 import { SectionTitle, Badge, Rating, Button } from '@tienda/ui';
 import { formatPrice } from '@tienda/ui';
+import type { StorefrontProduct } from '@lib/storefront/types';
 
 type DealsProps = {
+  items?: StorefrontProduct[];
   className?: string;
 };
 
@@ -53,7 +55,11 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
   );
 }
 
-export function Deals({ className }: DealsProps) {
+export function Deals({ items, className }: DealsProps) {
+  const products = items ?? [];
+
+  if (products.length === 0) return null;
+
   return (
     <section className={cn('py-12 sm:py-16', className)}>
       <Container size="xl">
@@ -67,11 +73,11 @@ export function Deals({ className }: DealsProps) {
               <p className="text-sm text-muted-foreground">Aprovechá estos precios antes de que se acaben</p>
             </div>
           </div>
-          <CountdownTimer targetDate="2026-08-15T23:59:59" />
+          <CountdownTimer targetDate={dealsCountdownTarget} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {dealProducts.map((product) => (
+          {products.map((product) => (
             <article
               key={product.id}
               className="group relative rounded-xl border-2 border-destructive/20 bg-background overflow-hidden transition-all duration-200 hover:shadow-md hover:border-destructive/40"
@@ -89,7 +95,7 @@ export function Deals({ className }: DealsProps) {
 
               <div className="p-4 space-y-2">
                 <p className="text-xs text-muted-foreground">{product.brand}</p>
-                <a href={`/producto/${product.slug}`} className="block">
+                <a href={`/product/${product.slug}`} className="block">
                   <h3 className="text-sm font-medium text-foreground line-clamp-2 hover:text-primary transition-colors">
                     {product.name}
                   </h3>
@@ -107,7 +113,7 @@ export function Deals({ className }: DealsProps) {
 
               <div className="px-4 pb-4">
                 <Button size="sm" fullWidth asChild>
-                  <a href={`/producto/${product.slug}`}>Aprovechar Oferta</a>
+                  <a href={`/product/${product.slug}`}>Aprovechar Oferta</a>
                 </Button>
               </div>
             </article>
@@ -116,8 +122,8 @@ export function Deals({ className }: DealsProps) {
 
         <div className="mt-8 text-center">
           <Button variant="outline" asChild>
-            <a href="/ofertas">
-              Ver Todas las Ofertas
+            <a href="/catalogo?sort=price-desc">
+              Ver Todos los Productos
               <ArrowRight className="h-4 w-4" />
             </a>
           </Button>

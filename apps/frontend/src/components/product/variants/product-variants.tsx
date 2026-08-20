@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@lib/helpers/cn';
-import type { PDPProduct, ProductVariant } from '../mock-data';
+import type { PDPProduct, ProductVariant } from '@lib/storefront/types';
 
 type ProductVariantsProps = {
   product: PDPProduct;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { promoBanners, type PromoBanner } from '@lib/home/mock-data';
+import { promoBanners, type PromoBanner } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 import { Button } from '@tienda/ui';
 

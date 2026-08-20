@@ -5,43 +5,36 @@ import { Button } from '@tienda/ui';
 type ActiveFilter = {
   id: string;
   label: string;
+  removeHref: string;
 };
 
 type ActiveFiltersProps = {
   filters?: ActiveFilter[];
+  clearHref: string;
   className?: string;
 };
 
-export function ActiveFilters({ filters = defaultFilters, className }: ActiveFiltersProps) {
-  if (!filters || filters.length === 0) return null;
+export function ActiveFilters({ filters = [], clearHref, className }: ActiveFiltersProps) {
+  if (filters.length === 0) return null;
 
   return (
     <div className={cn('flex flex-wrap items-center gap-2', className)}>
       <span className="text-xs text-muted-foreground font-medium">Filtros activos:</span>
       {filters.map((f) => (
-        <span
+        <a
           key={f.id}
+          href={f.removeHref}
           className="inline-flex items-center gap-1 rounded-full border border-border bg-accent/50 px-2.5 py-1 text-xs font-medium"
         >
           {f.label}
-          <button
-            type="button"
-            className="ml-0.5 rounded-sm p-1 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={`Remove ${f.label} filter`}
-          >
+          <span className="ml-0.5 rounded-sm p-0.5 hover:bg-accent transition-colors" aria-hidden="true">
             <X className="h-3 w-3" />
-          </button>
-        </span>
+          </span>
+        </a>
       ))}
-      <Button variant="ghost" size="xs" className="text-xs text-muted-foreground">
-        Limpiar todos
+      <Button variant="ghost" size="xs" asChild className="text-xs text-muted-foreground">
+        <a href={clearHref}>Limpiar todos</a>
       </Button>
     </div>
   );
 }
-
-const defaultFilters: ActiveFilter[] = [
-  { id: 'cat-1', label: 'Cerraduras Inteligentes' },
-  { id: 'brand-1', label: 'Yale' },
-  { id: 'disc-1', label: '20% o más' },
-];

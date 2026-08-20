@@ -1,5 +1,5 @@
 import { cn } from '@lib/helpers/cn';
-import { faqItems } from '@lib/home/mock-data';
+import { faqItems } from '@lib/home';
 import { Container } from '@components/layout/containers/container';
 import { SectionTitle, Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@tienda/ui';
 

@@ -3,75 +3,126 @@
 import { useState } from 'react';
 import { X, ChevronDown, Minus, Plus } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { filterDefinitions, type FilterDefinition } from '@lib/catalog/mock-data';
-import { Button, Checkbox, Rating } from '@tienda/ui';
+import { Button } from '@tienda/ui';
+import type { StorefrontBrand, StorefrontCategory } from '@lib/storefront/types';
 
 type CatalogSidebarProps = {
+  categories: StorefrontCategory[];
+  brands: StorefrontBrand[];
+  currentCategoria?: string;
+  currentBrand?: string;
+  clearHref: string;
   className?: string;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
 };
 
-function FilterSection({ def }: { def: FilterDefinition }) {
-  const [expanded, setExpanded] = useState(true);
+function CategoryTree({
+  categories,
+  activeSlug,
+}: {
+  categories: StorefrontCategory[];
+  activeSlug?: string;
+}) {
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="border-b border-border py-4">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-2"
-        aria-expanded={expanded}
-      >
-        {def.label}
-        {expanded ? <Minus className="h-3.5 w-3.5 text-muted-foreground" /> : <Plus className="h-3.5 w-3.5 text-muted-foreground" />}
-      </button>
+    <div className="space-y-1">
+      {categories.map((cat) => {
+        const hasChildren = (cat.children?.length ?? 0) > 0;
+        const isExpanded = expanded === cat.id || activeSlug === cat.slug;
+        const isActive = activeSlug === cat.slug;
 
-      {expanded && (
-        <div className="mt-2 space-y-2 px-1">
-          {def.type === 'checkbox' && def.options?.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 cursor-pointer group">
-              <Checkbox value={opt.value} />
-              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors flex-1">{opt.label}</span>
-              <span className="text-xs text-muted-foreground">({opt.count})</span>
-            </label>
-          ))}
-
-          {def.type === 'rating' && def.options?.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 cursor-pointer group">
-              <Checkbox value={opt.value} />
-              <Rating value={Number(opt.value)} size="sm" className="flex-1" />
-              <span className="text-xs text-muted-foreground">({opt.count})</span>
-            </label>
-          ))}
-
-          {def.type === 'range' && (
-            <div className="space-y-2 pt-1">
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  placeholder={`$${def.min?.toLocaleString()}`}
-                  className="flex h-10 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={`${def.label} mínimo`}
-                />
-                <span className="text-muted-foreground text-xs">a</span>
-                <input
-                  type="number"
-                  placeholder={`$${def.max?.toLocaleString()}`}
-                  className="flex h-10 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={`${def.label} máximo`}
-                />
-              </div>
-              <Button size="sm" variant="outline" fullWidth>Aplicar</Button>
+        return (
+          <div key={cat.id}>
+            <div className="flex items-center">
+              <a
+                href={cat.href}
+                className={cn(
+                  'flex-1 rounded-md px-2 py-1.5 text-sm transition-colors',
+                  isActive ? 'font-medium text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-accent',
+                )}
+              >
+                {cat.name}
+              </a>
+              {hasChildren && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isExpanded ? null : cat.id)}
+                  className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  aria-label={isExpanded ? `Contraer ${cat.name}` : `Expandir ${cat.name}`}
+                >
+                  {isExpanded ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                </button>
+              )}
             </div>
-          )}
-        </div>
-      )}
+
+            {isExpanded && hasChildren && (
+              <div className="ml-3 mt-1 space-y-1 border-l border-border pl-2">
+                {cat.children?.map((child) => (
+                  <a
+                    key={child.id}
+                    href={child.href}
+                    className={cn(
+                      'block rounded-md px-2 py-1 text-sm transition-colors',
+                      activeSlug === child.slug
+                        ? 'font-medium text-primary'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-accent',
+                    )}
+                  >
+                    {child.name}
+                    {child.productCount > 0 && (
+                      <span className="ml-1 text-xs text-muted-foreground/70">({child.productCount})</span>
+                    )}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export function CatalogSidebar({ className, isMobileOpen, onMobileClose }: CatalogSidebarProps) {
+function BrandList({ brands, activeSlug }: { brands: StorefrontBrand[]; activeSlug?: string }) {
+  if (brands.length === 0) {
+    return <p className="px-2 py-1.5 text-sm text-muted-foreground">Sin marcas disponibles</p>;
+  }
+
+  return (
+    <div className="space-y-1">
+      {brands.map((brand) => (
+        <a
+          key={brand.id}
+          href={brand.href}
+          className={cn(
+            'flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors',
+            activeSlug === brand.slug
+              ? 'font-medium text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent',
+          )}
+        >
+          <span>{brand.name}</span>
+          {brand.productCount > 0 && (
+            <span className="text-xs text-muted-foreground/70">({brand.productCount})</span>
+          )}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+export function CatalogSidebar({
+  categories,
+  brands,
+  currentCategoria,
+  currentBrand,
+  clearHref,
+  className,
+  isMobileOpen,
+  onMobileClose,
+}: CatalogSidebarProps) {
   return (
     <>
       {isMobileOpen && (
@@ -103,15 +154,27 @@ export function CatalogSidebar({ className, isMobileOpen, onMobileClose }: Catal
           </button>
         </div>
 
-        <div className="px-4 lg:px-0">
-          {filterDefinitions.map((def) => (
-            <FilterSection key={def.id} def={def} />
-          ))}
+        <div className="px-4 lg:px-0 space-y-6">
+          <div>
+            <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground px-2 py-2">
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              Categorías
+            </h3>
+            <CategoryTree categories={categories} activeSlug={currentCategoria} />
+          </div>
+
+          <div>
+            <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground px-2 py-2">
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              Marcas
+            </h3>
+            <BrandList brands={brands} activeSlug={currentBrand} />
+          </div>
         </div>
 
         <div className="p-4 lg:p-0 lg:pt-4 space-y-2 lg:sticky lg:bottom-0 lg:bg-background">
-          <Button size="sm" variant="outline" fullWidth>
-            Limpiar filtros
+          <Button size="sm" variant="outline" fullWidth asChild>
+            <a href={clearHref}>Limpiar filtros</a>
           </Button>
           <Button size="sm" fullWidth className="lg:hidden" onClick={onMobileClose}>
             Ver resultados

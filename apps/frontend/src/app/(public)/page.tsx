@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTenantId } from '@lib/auth/tenant';
 import { Hero } from '@components/home/hero';
 import { Categories } from '@components/home/categories';
 import { FeaturedProducts } from '@components/home/featured-products';
@@ -10,7 +11,13 @@ import { Testimonials } from '@components/home/testimonials';
 import { Faq } from '@components/home/faq';
 import { Cta } from '@components/home/cta';
 import { FaqSchema } from '@components/seo';
-import { faqItems } from '@lib/home/mock-data';
+import { faqItems } from '@lib/home';
+import {
+  listFeaturedStorefrontProducts,
+  listPromotedProducts,
+  listPublicBrands,
+  listPublicCategories,
+} from '@lib/storefront/catalog';
 
 export const metadata: Metadata = {
   title: 'Tienda — Seguridad Inteligente y Domótica',
@@ -35,15 +42,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const tenantId = getTenantId();
+
+  const [featured, categories, brands, deals] = await Promise.all([
+    listFeaturedStorefrontProducts(tenantId),
+    listPublicCategories(tenantId),
+    listPublicBrands(tenantId),
+    listPromotedProducts(tenantId),
+  ]);
+
   return (
     <>
       <FaqSchema items={faqItems} />
       <Hero />
-      <Categories />
-      <FeaturedProducts />
-      <Deals />
-      <Brands />
+      <Categories items={categories} />
+      <FeaturedProducts items={featured} />
+      <Deals items={deals} />
+      <Brands items={brands} />
       <Benefits />
       <Promotions />
       <Testimonials />

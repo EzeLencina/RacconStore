@@ -1,33 +1,3 @@
-export type HomeProduct = {
-  id: string;
-  name: string;
-  slug: string;
-  sku: string;
-  brand: string;
-  category: string;
-  price: number;
-  originalPrice?: number;
-  discount?: number;
-  rating: number;
-  reviewCount: number;
-  image: string;
-  badge?: string;
-  badgeVariant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
-  inStock: boolean;
-  stockCount?: number;
-  featured?: boolean;
-  isNew?: boolean;
-};
-
-export type HomeCategory = {
-  id: string;
-  name: string;
-  slug: string;
-  image: string;
-  productCount: number;
-  href: string;
-};
-
 export type HeroSlide = {
   id: string;
   title: string;
@@ -65,27 +35,6 @@ export type Benefit = {
   description: string;
 };
 
-export type Deal = {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  originalPrice: number;
-  discount: number;
-  image: string;
-  brand: string;
-  stockCount: number;
-  endsAt: string;
-};
-
-export type Brand = {
-  id: string;
-  name: string;
-  slug: string;
-  logo: string;
-  href: string;
-};
-
 export type PromoBanner = {
   id: string;
   title: string;
@@ -118,9 +67,9 @@ export const heroSlides: HeroSlide[] = [
     title: 'Protección 24/7\ncon Cámaras HD',
     subtitle: 'Cámaras con visión nocturna, detección de movimiento y almacenamiento en la nube. Tu seguridad, siempre conectada.',
     cta: 'Ver Cámaras',
-    ctaHref: '/categoria/camaras-seguridad',
-    secondaryCta: 'Ver Ofertas',
-    secondaryCtaHref: '/ofertas',
+    ctaHref: '/catalogo?categoria=camaras-seguridad',
+    secondaryCta: 'Ver Destacados',
+    secondaryCtaHref: '/catalogo/destacados',
     image: '/images/hero/cameras.jpg',
     imageAlt: 'Security cameras',
     alignment: 'center',
@@ -131,41 +80,14 @@ export const heroSlides: HeroSlide[] = [
     title: 'Domótica\npara tu Empresa',
     subtitle: 'Control de acceso, videoporteros IP y sistemas integrados para oficinas inteligentes.',
     cta: 'Más Información',
-    ctaHref: '/categoria/domotica',
-    secondaryCta: 'Contactar',
-    secondaryCtaHref: '/contacto',
+    ctaHref: '/catalogo?categoria=domotica',
+    secondaryCta: 'Ver Catálogo',
+    secondaryCtaHref: '/catalogo',
     image: '/images/hero/office.jpg',
     imageAlt: 'Smart office automation',
     alignment: 'right',
     bgColor: 'from-muted via-background to-primary/5',
   },
-];
-
-export const homeCategories: HomeCategory[] = [
-  { id: '1', name: 'Cerraduras Inteligentes', slug: 'cerraduras-inteligentes', image: '/images/categories/smart-locks.jpg', productCount: 48, href: '/categoria/cerraduras-inteligentes' },
-  { id: '2', name: 'Cámaras de Seguridad', slug: 'camaras-seguridad', image: '/images/categories/security-cameras.jpg', productCount: 72, href: '/categoria/camaras-seguridad' },
-  { id: '3', name: 'Videoporteros', slug: 'videoporteros', image: '/images/categories/doorbells.jpg', productCount: 24, href: '/categoria/videoporteros' },
-  { id: '4', name: 'Control de Acceso', slug: 'control-acceso', image: '/images/categories/access-control.jpg', productCount: 36, href: '/categoria/control-acceso' },
-  { id: '5', name: 'Domótica', slug: 'domotica', image: '/images/categories/smart-home.jpg', productCount: 56, href: '/categoria/domotica' },
-  { id: '6', name: 'Accesorios', slug: 'accesorios', image: '/images/categories/accessories.jpg', productCount: 89, href: '/categoria/accesorios' },
-];
-
-export const dealProducts: HomeProduct[] = [
-  { id: 'd1', name: 'Cerradura Inteligente Yale YRD256', slug: 'cerradura-inteligente-yale-yrd256', sku: 'YRD-256-BLE', brand: 'Yale', category: 'Cerraduras Inteligentes', price: 89999, originalPrice: 112999, discount: 20, rating: 4.5, reviewCount: 128, image: '/images/products/yale-yrd256.jpg', badge: '20% OFF', badgeVariant: 'danger', inStock: true, stockCount: 15 },
-  { id: 'd2', name: 'Cámara IP Ezviz C8C Pro 4K', slug: 'camara-ip-ezviz-c8c-pro-4k', sku: 'C8C-PRO-4K', brand: 'Ezviz', category: 'Cámaras de Seguridad', price: 45999, originalPrice: 57999, discount: 21, rating: 4.7, reviewCount: 89, image: '/images/products/ezviz-c8c.jpg', badge: '21% OFF', badgeVariant: 'danger', inStock: true, stockCount: 23 },
-  { id: 'd3', name: 'Cámara PTZ Hikvision 5MP', slug: 'camara-ptz-hikvision-5mp', sku: 'DS-2DE5225IW-AE', brand: 'Hikvision', category: 'Cámaras de Seguridad', price: 215999, originalPrice: 269999, discount: 20, rating: 4.8, reviewCount: 112, image: '/images/products/hikvision-ptz.jpg', badge: '20% OFF', badgeVariant: 'danger', inStock: true, stockCount: 11 },
-  { id: 'd4', name: 'Cerradura Inteligente Philips Gamma', slug: 'cerradura-inteligente-philips-gamma', sku: 'PH-GAMMA-SL', brand: 'Philips', category: 'Cerraduras Inteligentes', price: 64999, originalPrice: 84999, discount: 24, rating: 4.2, reviewCount: 56, image: '/images/products/philips-gamma.jpg', badge: '24% OFF', badgeVariant: 'danger', inStock: true, stockCount: 19 },
-];
-
-export const brands: Brand[] = [
-  { id: 'b1', name: 'Yale', slug: 'yale', logo: '/images/brands/yale.svg', href: '/marca/yale' },
-  { id: 'b2', name: 'Philips', slug: 'philips', logo: '/images/brands/philips.svg', href: '/marca/philips' },
-  { id: 'b3', name: 'Samsung', slug: 'samsung', logo: '/images/brands/samsung.svg', href: '/marca/samsung' },
-  { id: 'b4', name: 'Intelbras', slug: 'intelbras', logo: '/images/brands/intelbras.svg', href: '/marca/intelbras' },
-  { id: 'b5', name: 'Ezviz', slug: 'ezviz', logo: '/images/brands/ezviz.svg', href: '/marca/ezviz' },
-  { id: 'b6', name: 'Dahua', slug: 'dahua', logo: '/images/brands/dahua.svg', href: '/marca/dahua' },
-  { id: 'b7', name: 'Hikvision', slug: 'hikvision', logo: '/images/brands/hikvision.svg', href: '/marca/hikvision' },
-  { id: 'b8', name: 'TP-Link', slug: 'tp-link', logo: '/images/brands/tplink.svg', href: '/marca/tp-link' },
 ];
 
 export const benefits: Benefit[] = [
@@ -194,17 +116,19 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const promoBanners: PromoBanner[] = [
-  { id: 'pb1', title: 'Hot Sale 2025', subtitle: 'Hasta 40% OFF en seguridad inteligente. Las mejores marcas con precios imperdibles.', cta: 'Ver Ofertas', ctaHref: '/ofertas', image: '/images/promos/hot-sale.jpg', imageAlt: 'Hot Sale 2025', bgColor: 'from-primary to-primary/80', textColor: 'text-primary-foreground', campaign: 'Hot Sale' },
-  { id: 'pb2', title: 'Black Friday Tech', subtitle: 'Ofertas exclusivas en tecnología para el hogar. Renová tu seguridad al mejor precio.', cta: 'Aprovechar', ctaHref: '/ofertas', image: '/images/promos/black-friday.jpg', imageAlt: 'Black Friday Tech', bgColor: 'from-destructive to-destructive/80', textColor: 'text-destructive-foreground', campaign: 'Black Friday' },
+  { id: 'pb1', title: 'Hot Sale 2025', subtitle: 'Hasta 40% OFF en seguridad inteligente. Las mejores marcas con precios imperdibles.', cta: 'Ver Destacados', ctaHref: '/catalogo/destacados', image: '/images/promos/hot-sale.jpg', imageAlt: 'Hot Sale 2025', bgColor: 'from-primary to-primary/80', textColor: 'text-primary-foreground', campaign: 'Hot Sale' },
+  { id: 'pb2', title: 'Black Friday Tech', subtitle: 'Ofertas exclusivas en tecnología para el hogar. Renová tu seguridad al mejor precio.', cta: 'Ver Catálogo', ctaHref: '/catalogo', image: '/images/promos/black-friday.jpg', imageAlt: 'Black Friday Tech', bgColor: 'from-destructive to-destructive/80', textColor: 'text-destructive-foreground', campaign: 'Black Friday' },
 ];
 
 export const ctaSection = {
   title: '¿Listo para hacer tu hogar más inteligente?',
   description: 'Equipá tu casa con la mejor tecnología en seguridad y domótica. Visitanos, te asesoramos sin compromiso.',
-  cta: 'Hablar con un Asesor',
-  ctaHref: '/contacto',
-  secondaryCta: 'Ver Catálogo',
-  secondaryCtaHref: '/catalogo',
+  cta: 'Ver Catálogo',
+  ctaHref: '/catalogo',
+  secondaryCta: 'Crear Cuenta',
+  secondaryCtaHref: '/register',
   image: '/images/cta/smart-home-cta.jpg',
   imageAlt: 'Smart home setup',
 };
+
+export const dealsCountdownTarget = '2026-12-31T23:59:59';

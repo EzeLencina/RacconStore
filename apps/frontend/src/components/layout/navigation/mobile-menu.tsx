@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, ChevronRight, ChevronDown, User, ShoppingCart, Heart, Settings, Package, LogOut, Menu } from 'lucide-react';
+import { X, ChevronDown, LogOut } from 'lucide-react';
 import { cn } from '@lib/helpers/cn';
-import { categories, mainNavPages, accountPages } from '@lib/layout/navigation';
-import type { NavCategory } from '@lib/layout/navigation';
+import { mainNavPages, accountPages } from '@lib/layout/navigation';
+import type { StorefrontCategory } from '@lib/storefront/types';
 
 type MobileMenuProps = {
   isOpen: boolean;
   onClose: () => void;
+  categories?: StorefrontCategory[];
 };
 
-export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, categories = [] }: MobileMenuProps) {
   const router = useRouter();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
@@ -133,7 +134,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 }
 
 type MobileCategoryItemProps = {
-  category: NavCategory;
+  category: StorefrontCategory;
   isExpanded: boolean;
   expandedSub: string | null;
   onToggle: (id: string) => void;

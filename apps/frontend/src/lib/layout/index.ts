@@ -1,6 +1,4 @@
 export {
-  categories,
-  featuredBrands,
   mainNavPages,
   accountPages,
   footerSections,
@@ -10,13 +8,9 @@ export {
   announcementConfig,
   topBarConfig,
   popularSearches,
-  mockRoutes,
 } from './navigation';
 
 export type {
-  NavCategory,
-  NavSubcategory,
-  NavBrand,
   NavPage,
   AnnoucementConfig,
   TopBarConfig,

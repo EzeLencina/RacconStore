@@ -1,5 +1,5 @@
 import { cn } from '@lib/helpers/cn';
-import type { PDPProduct } from '../mock-data';
+import type { PDPProduct } from '@lib/storefront/types';
 
 type ProductStockProps = {
   product: PDPProduct;
